@@ -5,8 +5,18 @@ from imutils import contours
 import numpy as np
 import imutils
 import cv2
+import xlsxwriter
+
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.externals import joblib
+
+
+
+
+
 app = Flask(__name__)
-model=ludwigModel.load('model')
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -23,7 +33,7 @@ def predict():
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     edged = cv2.Canny(blurred, 75, 200)
-#cv2.imshow("Original", image)
+
 
     cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
@@ -98,10 +108,13 @@ def predict():
 	
         
     workbook.close()
-    if request.method == 'POST':
-        comment = request.form['comment']
-        data = [comment]
-    return render_template('result.html', prediction = my_prediction)
+   # if request.method == 'POST':
+       # comment = request.form['comment']
+        #data = [comment]
+        #vect = cv.transform(data).toarray()
+        #my_prediction = clf.predict(vect)   , prediction = my_prediction
+        
+    return render_template('result.html')
 
 
 if __name__ == '__main__':
