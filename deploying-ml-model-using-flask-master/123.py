@@ -1,12 +1,21 @@
-from flask import Flask, render_template,url_for,request
+from flask import Flask, render_template,url_for,request,send_file
 import pickle
 from imutils.perspective import four_point_transform
 from imutils import contours
 import numpy as np
 import imutils
 import cv2
+import xlsxwriter
+import flask_excel as excel
+import pandas as pd
+
+
+
+
+
+
 app = Flask(__name__)
-model=ludwigModel.load('model')
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -16,14 +25,14 @@ def predict():
     image = cv2.imread("test.jpg")
     print(image.shape)
 
-
+ 
     workbook = xlsxwriter.Workbook('Attendence.xlsx')
     worksheet = workbook.add_worksheet("sheet")
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     edged = cv2.Canny(blurred, 75, 200)
-#cv2.imshow("Original", image)
+
 
     cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
@@ -98,10 +107,14 @@ def predict():
 	
         
     workbook.close()
-    if request.method == 'POST':
-        comment = request.form['comment']
-        data = [comment]
-    return render_template('result.html', prediction = my_prediction)
+    #if request.method == 'POST':
+       # comment = request.form['comment']
+        #data = [comment]
+        #vect = cv.transform(data).toarray()
+        #my_prediction = clf.predict(vect)   , prediction = my_prediction
+        
+    return render_template('result.html')
+    return send_file( workbook , attachment_filename="Attendence.xlsx", as_attachment=True)
 
 
 if __name__ == '__main__':
