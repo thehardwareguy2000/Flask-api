@@ -7,6 +7,28 @@ import imutils
 import cv2
 app = Flask(__name__)
 model=ludwigModel.load('model')
+
+######################################################
+app = Flask(__name__)
+
+
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    return render_template('home.html')
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
+@app.route('/registerV')
+def registerV():
+    return render_template('registerV.html')
+
+
+
+###############################################################
+
+
 @app.route('/')
 def home():
     return render_template('home.html')
